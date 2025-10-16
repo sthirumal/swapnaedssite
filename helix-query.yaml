@@ -1,6 +1,6 @@
 version: 1
 indices:
-  swapnaNewEdsSite:
+  swapnaedssite:
     include:
       - "/**"
     target: /query-index.json
