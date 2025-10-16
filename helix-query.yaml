@@ -1,14 +1,40 @@
-indexes:
-  query-index:
-    source: /query-index.xlsx
-    sheet: helix-default
-    columns:
-      - path
-      - title
-      - description
-      - image
-      - lastModified
-    # Optional: filter out items with noindex
-    filter:
-      robots: "!noindex"
+version: 1
+indices:
+  swapnaNewEdsSite:
+    include:
+      - "/**"
+    target: /query-index.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      description:
+        select: head > meta[property="og:description"]
+        value: |
+          attribute(el, 'content')
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, 'content'), 'https:\\/\\/[^/]+(\\/.*)')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+      robots:
+        select: head > meta[name="robots"]
+        value: |
+          attribute(el, 'content')
+      theme:
+        select: head > meta[name="theme"]
+        value: |
+          attribute(el, 'content')
+      author:
+        select: none
+        value: |
+          headers['Author']
+      pagetitle:
+        selectFirst: h1
+        value: |
+          textContent(el)
 
